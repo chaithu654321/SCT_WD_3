@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .quiz-container {
+      background: #fff;
+      width: 90%;
+      max-width: 500px;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .options button {
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #f9f9f9;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .options button:hover {
+      background: #e0f0ff;
+    }
+
+    .btn-next {
+      padding: 10px 20px;
+      font-size: 16px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn-next:hover {
+      background: #0056b3;
+    }
+
+    .result {
+      font-size: 20px;
+      margin-top: 20px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="quiz-container" id="quiz">
+    <h2 id="question">Loading...</h2>
+    <div class="options" id="options"></div>
+    <button class="btn-next hidden" id="nextBtn">Next</button>
+    <div class="result hidden" id="result"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "What does HTML stand for?",
+        options: [
+          "Hyper Trainer Marking Language",
+          "HyperText Markup Language",
+          "HyperText Markdown Language",
+          "Home Tool Markup Language"
+        ],
+        answer: 1
+      },
+      {
+        question: "Which programming language is used for web development?",
+        options: [
+          "Python",
+          "C++",
+          "JavaScript",
+          "Java"
+        ],
+        answer: 2
+      },
+      {
+        question: "What does CSS stand for?",
+        options: [
+          "Cascading Style Sheets",
+          "Creative Style Syntax",
+          "Computer Style Syntax",
+          "Colorful Style Sheets"
+        ],
+        answer: 0
+      },
+      {
+        question: "Which HTML tag is used to create a link?",
+        options: [
+          "<link>",
+          "<a>",
+          "<href>",
+          "<src>"
+        ],
+        answer: 1
+      },
+      {
+        question: "Which symbol is used for comments in JavaScript?",
+        options: [
+          "// comment",
+          "/* comment */",
+          "# comment",
+          "<!-- comment -->"
+        ],
+        answer: 0
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const nextBtn = document.getElementById("nextBtn");
+    const resultEl = document.getElementById("result");
+
+    function showQuestion() {
+      const q = questions[currentQuestion];
+      questionEl.textContent = q.question;
+      optionsEl.innerHTML = "";
+
+      q.options.forEach((option, index) => {
+        const btn = document.createElement("button");
+        btn.textContent = option;
+        btn.onclick = () => selectAnswer(index);
+        optionsEl.appendChild(btn);
+      });
+
+      nextBtn.classList.add("hidden");
+    }
+
+    function selectAnswer(index) {
+      const correct = questions[currentQuestion].answer;
+
+      const buttons = optionsEl.querySelectorAll("button");
+      buttons.forEach((btn, i) => {
+        btn.disabled = true;
+        if (i === correct) {
+          btn.style.backgroundColor = "#d4edda"; // Green
+        } else if (i === index) {
+          btn.style.backgroundColor = "#f8d7da"; // Red
+        }
+      });
+
+      if (index === correct) {
+        score++;
+      }
+
+      nextBtn.classList.remove("hidden");
+    }
+
+    nextBtn.addEventListener("click", () => {
+      currentQuestion++;
+      if (currentQuestion < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    });
+
+    function showResult() {
+      questionEl.classList.add("hidden");
+      optionsEl.classList.add("hidden");
+      nextBtn.classList.add("hidden");
+      resultEl.classList.remove("hidden");
+      resultEl.textContent = `You scored ${score} out of ${questions.length}! 🎉`;
+    }
+
+    // Start the quiz
+    showQuestion();
+  </script>
+
+</body>
+</html>
